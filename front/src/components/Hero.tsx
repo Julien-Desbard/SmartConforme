@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 export default function Hero() {
 	return (
 		<>
-			<div className="w-screen min-h-screen flex flex-col items-center justify-center p-10 bg-linear-to-b from-[#0a0e14] to-[#14181f]">
+			<div className="w-screen min-h-screen flex flex-col items-center justify-start pt-60 p-10 bg-linear-to-b from-[#0a0e14] to-[#14181f]">
 				{/* Header */}
 				<div className="flex items-center mb-10 gap-2.5">
 					<div>

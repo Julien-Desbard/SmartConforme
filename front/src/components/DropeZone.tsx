@@ -1,11 +1,19 @@
 'use client'
 import { useDropzone } from 'react-dropzone'
-import { useUploadThing } from '@/utils/uploadthing'
 import { Upload } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export default function DropZone() {
 	const [isDragging, setIsDragging] = useState(false)
+	const [isUploading, setIsUploading] = useState(false)
+	const [error, setError] = useState<string | null>(null)
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setError(null)
+		}, 5000)
+		return () => clearTimeout(timer)
+	}, [error])
 
 	// Monitoring drag & drop on the page
 	const handleDragEnter = (e: DragEvent) => {
@@ -40,21 +48,41 @@ export default function DropZone() {
 		}
 	}, [])
 
-	// Setting upLoadthing
-	const { startUpload, isUploading } = useUploadThing('pdfUploader', {
-		onClientUploadComplete: (res) => {
-			console.log('PDF uploadé:', res[0].ufsUrl)
-		},
-		onUploadError: (error) => {
-			console.error('Erreur:', error.message)
-		},
-	})
+	const handleUpload = async (files: File[]) => {
+		const file = files[0]
+		if (!file) return
+
+		setIsUploading(true)
+
+		try {
+			const formData = new FormData()
+			formData.append('file', file)
+
+			const response = await fetch('/api/upload', {
+				method: 'POST',
+				body: formData,
+			})
+
+			const data = await response.json()
+
+			if (response.ok) {
+				console.log('upload réussi', data)
+			} else {
+				setError(data.error)
+			}
+		} catch (error) {
+			setError('Erreur réseau, réessayez')
+		} finally {
+			setIsUploading(false)
+		}
+	}
 
 	const { getRootProps, getInputProps } = useDropzone({
 		accept: { 'application/pdf': ['.pdf'] },
 		maxFiles: 1,
-		onDrop: (files) => {
-			startUpload(files)
+		onDrop: handleUpload,
+		onDropRejected: () => {
+			setError('Seuls les fichiers PDF sont acceptés')
 		},
 	})
 
@@ -94,6 +122,7 @@ export default function DropZone() {
 				{sousTitre && (
 					<p className="text-lg text-[#8b949e] tracking-wide">{sousTitre}</p>
 				)}
+				{error && <p className="text-orange-400 text-lg">{error}</p>}
 			</div>
 		</div>
 	)
