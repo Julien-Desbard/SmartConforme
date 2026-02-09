@@ -1,0 +1,41 @@
+import { NextRequest, NextResponse } from 'next/server'
+
+export async function POST(req: NextRequest) {
+	let formData = await req.formData()
+	let file = formData.get('file')
+
+	if (file === null) {
+		return NextResponse.json({ error: 'aucun fichier fourni' }, { status: 400 })
+	}
+
+	if (!(file instanceof File)) {
+		return NextResponse.json({ error: 'Format invalide' }, { status: 400 })
+	}
+
+	if (file.type !== 'application/pdf') {
+		return NextResponse.json(
+			{ error: 'Le fichier n\'est pas un pdf' },
+			{ status: 400 },
+		)
+	}
+
+	if (file.size > 5 * 1024 * 1024) {
+		return NextResponse.json(
+			{ error: 'Le fichier est trop gros' },
+			{ status: 400 },
+		)
+	}
+
+	const arrayBuffer = await file.arrayBuffer()
+	let buffer = Buffer.from(arrayBuffer)
+	let bufferTest = buffer.subarray(0, 5).toString()
+
+	if (bufferTest === '%PDF-') {
+		return NextResponse.json({ message: 'appel api réussi' }, { status: 200 })
+	}
+
+    return NextResponse.json(
+    { error: 'Le fichier n\'est pas un PDF valide' }, 
+    { status: 400 }
+)
+}
