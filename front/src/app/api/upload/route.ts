@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
-	let formData = await req.formData()
-	let file = formData.get('file')
+	const formData = await req.formData()
+	const file = formData.get('file')
 
 	if (file === null) {
 		return NextResponse.json({ error: 'aucun fichier fourni' }, { status: 400 })
@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
 	}
 
 	const arrayBuffer = await file.arrayBuffer()
-	let buffer = Buffer.from(arrayBuffer)
-	let bufferTest = buffer.subarray(0, 5).toString()
+	const buffer = Buffer.from(arrayBuffer)
+	const bufferTest = buffer.subarray(0, 5).toString()
 
 	if (bufferTest === '%PDF-') {
 		return NextResponse.json({ message: 'appel api réussi' }, { status: 200 })

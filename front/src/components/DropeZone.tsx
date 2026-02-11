@@ -1,19 +1,21 @@
 'use client'
-import { useDropzone } from 'react-dropzone'
 import { Upload } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
-export default function DropZone() {
+interface ToastData {
+	message: string
+	open: boolean
+	type: 'default' | 'info' | 'warning' | 'error' | 'success'
+}
+
+interface DropZoneProps {
+	onResult: (data: ToastData) => void
+}
+
+export default function DropZone(props: DropZoneProps) {
 	const [isDragging, setIsDragging] = useState(false)
 	const [isUploading, setIsUploading] = useState(false)
-	const [error, setError] = useState<string | null>(null)
-
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setError(null)
-		}, 5000)
-		return () => clearTimeout(timer)
-	}, [error])
+	const fileInputRef = useRef<HTMLInputElement>(null)
 
 	// Monitoring drag & drop on the page
 	const handleDragEnter = (e: DragEvent) => {
@@ -32,6 +34,9 @@ export default function DropZone() {
 	const handleDrop = (e: DragEvent) => {
 		e.preventDefault()
 		setIsDragging(false)
+
+		const files = Array.from(e.dataTransfer?.files || [])
+		validateAndUpload(files)
 	}
 
 	useEffect(() => {
@@ -46,12 +51,58 @@ export default function DropZone() {
 			window.removeEventListener('dragleave', handleDragLeave)
 			window.removeEventListener('drop', handleDrop)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const handleUpload = async (files: File[]) => {
-		const file = files[0]
-		if (!file) return
+	// Toast management
+	const successToast = () => {
+		props.onResult({
+			message: 'PDF uploadé avec succès',
+			open: true,
+			type: 'success',
+		})
+	}
 
+	const errorToast = (message: string) => {
+		props.onResult({
+			message: message,
+			open: true,
+			type: 'error',
+		})
+	}
+
+	const warningToast = (message: string) => {
+		props.onResult({
+			message: message,
+			open: true,
+			type: 'warning',
+		})
+	}
+
+	const validateAndUpload = (files: File[]) => {
+		if (files.length === 0) return
+
+		if (files.length > 1) {
+			warningToast('Un seul fichier à la fois')
+			return
+		}
+
+		const file = files[0]
+
+		if (file.type !== 'application/pdf') {
+			warningToast('Seuls les fichiers PDF sont acceptés')
+			return
+		}
+
+		if (file.size > 5 * 1024 * 1024) {
+			warningToast('Fichier trop volumineux (max 5 Mo)')
+			return
+		}
+
+		handleUpload(file)
+	}
+
+	const handleUpload = async (file: File) => {
 		setIsUploading(true)
 
 		try {
@@ -67,27 +118,31 @@ export default function DropZone() {
 
 			if (response.ok) {
 				console.log('upload réussi', data)
+				successToast()
 			} else {
-				setError(data.error)
+				warningToast(data.error)
+				console.log(data.error)
 			}
 		} catch (error) {
-			setError('Erreur réseau, réessayez')
+			errorToast('erreur réseau')
+			console.error('erreur réseau', error)
 		} finally {
 			setIsUploading(false)
 		}
 	}
 
-	const { getRootProps, getInputProps } = useDropzone({
-		accept: { 'application/pdf': ['.pdf'] },
-		maxFiles: 1,
-		onDrop: handleUpload,
-		onDropRejected: () => {
-			setError('Seuls les fichiers PDF sont acceptés')
-		},
-	})
+	const handleClick = () => {
+		fileInputRef.current?.click()
+	}
+
+	const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = Array.from(e.target.files || [])
+		validateAndUpload(files)
+		e.target.value = ''
+	}
 
 	const baseStyle =
-		'flex flex-col items-center text-center py-12 px-24 w-3xl border-2 rounded-lg transition duration-200 '
+		'flex flex-col items-center text-center py-12 px-24 w-3xl border-2 rounded-lg transition duration-200 cursor-pointer '
 	const normalStyle =
 		'bg-gray-900 border-gray-800 border-dashed hover:border-[#06D6A0] hover:bg-[#06D6A0]/3 hover:-translate-y-1'
 	const draggingStyle =
@@ -108,11 +163,17 @@ export default function DropZone() {
 
 	return (
 		<div
-			{...getRootProps()}
+			onClick={handleClick}
 			className={`${baseStyle} ${isDragging ? draggingStyle : isUploading ? uploadingStyle : normalStyle}`}
 			data-testid="dropzone"
 		>
-			<input {...getInputProps()} />
+			<input
+				ref={fileInputRef}
+				type="file"
+				accept="application/pdf"
+				onChange={handleFileInputChange}
+				className="hidden"
+			/>
 			<Upload
 				size={100}
 				className="p-6 mb-10 bg-[#06D6A0]/10 rounded-xl text-[#06D6A0]"
@@ -122,7 +183,6 @@ export default function DropZone() {
 				{sousTitre && (
 					<p className="text-lg text-[#8b949e] tracking-wide">{sousTitre}</p>
 				)}
-				{error && <p className="text-orange-400 text-lg">{error}</p>}
 			</div>
 		</div>
 	)
