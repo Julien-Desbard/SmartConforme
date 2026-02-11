@@ -10,7 +10,7 @@ export function AnimatedToastMinimalDemo() {
 		_type: 'success' | 'error' | 'warning' | 'info' | 'default',
 	) => {
 		setShowToast(true)
-		setTimeout(() => setShowToast(false), 3000)
+		setTimeout(() => setShowToast(false), 15000)
 	}
 
 	return (

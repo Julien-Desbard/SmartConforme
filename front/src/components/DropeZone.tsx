@@ -54,28 +54,12 @@ export default function DropZone(props: DropZoneProps) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	// Toast management
-	const successToast = () => {
+	// Toast management - UNE SEULE FONCTION
+	const showToast = (message: string, type: ToastData['type']) => {
 		props.onResult({
-			message: 'PDF uploadé avec succès',
+			message,
 			open: true,
-			type: 'success',
-		})
-	}
-
-	const errorToast = (message: string) => {
-		props.onResult({
-			message: message,
-			open: true,
-			type: 'error',
-		})
-	}
-
-	const warningToast = (message: string) => {
-		props.onResult({
-			message: message,
-			open: true,
-			type: 'warning',
+			type,
 		})
 	}
 
@@ -83,19 +67,19 @@ export default function DropZone(props: DropZoneProps) {
 		if (files.length === 0) return
 
 		if (files.length > 1) {
-			warningToast('Un seul fichier à la fois')
+			showToast('Un seul fichier à la fois', 'warning')
 			return
 		}
 
 		const file = files[0]
 
 		if (file.type !== 'application/pdf') {
-			warningToast('Seuls les fichiers PDF sont acceptés')
+			showToast('Seuls les fichiers PDF sont acceptés', 'warning')
 			return
 		}
 
 		if (file.size > 5 * 1024 * 1024) {
-			warningToast('Fichier trop volumineux (max 5 Mo)')
+			showToast('Fichier trop volumineux (max 5 Mo)', 'warning')
 			return
 		}
 
@@ -118,14 +102,25 @@ export default function DropZone(props: DropZoneProps) {
 
 			if (response.ok) {
 				console.log('upload réussi', data)
-				successToast()
+				showToast('PDF uploadé avec succès', 'success')
 			} else {
-				warningToast(data.error)
-				console.log(data.error)
+				let userMessage = "Une erreur est survenue lors de l'upload"
+
+				if (response.status === 400) {
+					userMessage = 'Fichier invalide'
+				} else if (response.status === 413) {
+					userMessage = 'Fichier trop volumineux'
+				} else if (response.status === 500) {
+					userMessage = 'Erreur serveur, réessayez dans quelques instants'
+				}
+
+				showToast(userMessage, 'error')
+
+				console.error('Erreur upload:', { status: response.status, data })
 			}
 		} catch (error) {
-			errorToast('erreur réseau')
-			console.error('erreur réseau', error)
+			showToast('Erreur réseau, vérifiez votre connexion', 'error')
+			console.error('Erreur réseau:', error)
 		} finally {
 			setIsUploading(false)
 		}

@@ -1,7 +1,6 @@
 'use client'
 import { ReceiptEuro } from 'lucide-react'
 import DropZone from '@/components/DropeZone'
-import { Button } from './ui/button'
 import { MinimalToast } from './ui/animated-toast'
 import { useState } from 'react'
 
@@ -95,11 +94,11 @@ export default function Hero() {
 				<div className="mb-12">
 					<DropZone onResult={handleDropZoneResult}/>
 				</div>
-				<div>
+				{/* <div>
 					<a href="/facture_demo.pdf" download>
 						<Button className="text-lg">Télécharger une facture de test</Button>
 					</a>
-				</div>
+				</div> */}
 			</div>
 			<MinimalToast
 				open={toastOpen}
