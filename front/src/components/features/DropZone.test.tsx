@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import Hero from './Hero'
+import Hero from '../home/Hero'
 
 // indique que tout fetch dans le doc doit utiliser cette fonction moquée
 global.fetch = jest.fn()

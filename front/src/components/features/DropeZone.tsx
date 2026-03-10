@@ -54,7 +54,7 @@ export default function DropZone(props: DropZoneProps) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	// Toast management - UNE SEULE FONCTION
+	// Toast management
 	const showToast = (message: string, type: ToastData['type']) => {
 		props.onResult({
 			message,

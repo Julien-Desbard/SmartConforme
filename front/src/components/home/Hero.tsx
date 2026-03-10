@@ -1,9 +1,12 @@
 'use client'
 import { ReceiptEuro } from 'lucide-react'
-import DropZone from '@/components/DropeZone'
-import { MinimalToast } from './ui/animated-toast'
+import DropZone from '@/components/features/DropeZone'
+import { MinimalToast } from '../ui/animated-toast'
 import { useState } from 'react'
+import { Button } from '../ui/button'
+import Footer from '../footer/footer'
 
+// Hero.tsx
 interface ToastData {
 	message: string
 	open: boolean
@@ -18,7 +21,6 @@ export default function Hero() {
 	>('default')
 
 	// Toast management
-
 	const handleDropZoneResult = (data: ToastData) => {
 		setToastMessage(data.message)
 		setToastOpen(data.open)
@@ -94,11 +96,14 @@ export default function Hero() {
 				<div className="mb-12">
 					<DropZone onResult={handleDropZoneResult}/>
 				</div>
-				{/* <div>
+				<div>
 					<a href="/facture_demo.pdf" download>
 						<Button className="text-lg">Télécharger une facture de test</Button>
 					</a>
-				</div> */}
+				</div>
+				<div className='mt-auto'>
+					<Footer/>
+				</div>
 			</div>
 			<MinimalToast
 				open={toastOpen}

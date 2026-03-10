@@ -120,7 +120,7 @@ interface ToastItemProps {
 }
 
 function ToastItem({ toast, index, onRemove, isTop }: ToastItemProps) {
-	const { type = 'default', title, message, duration = 15000, action } = toast
+	const { type = 'default', title, message, duration = 5000, action } = toast
 
 	React.useEffect(() => {
 		if (duration > 0) {
@@ -244,7 +244,7 @@ export function MinimalToast({
 }: MinimalToastProps) {
 	React.useEffect(() => {
 		if (open) {
-			const timer = setTimeout(onClose, 15000)
+			const timer = setTimeout(onClose, 5000)
 			return () => clearTimeout(timer)
 		}
 	}, [open, onClose])
