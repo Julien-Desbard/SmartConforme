@@ -129,19 +129,22 @@ function ToastItem({ toast, index, onRemove, isTop }: ToastItemProps) {
 		}
 	}, [duration, onRemove])
 
+	// Icônes colorées selon le type de toast
+	// On utilise les couleurs sémantiques de SmartConforme
 	const icons: Record<ToastType, React.ReactNode> = {
-		success: <CheckCircle className="h-5 w-5 text-emerald-500" />,
-		error: <AlertCircle className="h-5 w-5 text-red-500" />,
-		warning: <AlertTriangle className="h-5 w-5 text-amber-500" />,
-		info: <Info className="h-5 w-5 text-blue-500" />,
+		success: <CheckCircle className="h-5 w-5" style={{ color: '#16A34A' }} />,   // Vert — document à jour
+		error: <AlertCircle className="h-5 w-5" style={{ color: '#DC2626' }} />,     // Rouge — document expiré
+		warning: <AlertTriangle className="h-5 w-5" style={{ color: '#F59E0B' }} />, // Orange — expiration proche
+		info: <Info className="h-5 w-5" style={{ color: '#2563EB' }} />,             // Bleu — extraction en cours
 		default: <Bell className="h-5 w-5 text-muted-foreground" />,
 	}
 
+	// Couleur de la bordure gauche du toast (barre colorée à gauche)
 	const borderColors: Record<ToastType, string> = {
-		success: 'border-l-emerald-500',
-		error: 'border-l-red-500',
-		warning: 'border-l-amber-500',
-		info: 'border-l-blue-500',
+		success: 'border-l-[#16A34A]',
+		error: 'border-l-[#DC2626]',
+		warning: 'border-l-[#F59E0B]',
+		info: 'border-l-[#2563EB]',
 		default: 'border-l-border',
 	}
 
@@ -203,10 +206,11 @@ function ToastItem({ toast, index, onRemove, isTop }: ToastItemProps) {
 					transition={{ duration: duration / 1000, ease: 'linear' }}
 					className={cn(
 						'absolute right-0 bottom-0 left-0 h-1 origin-left rounded-b-lg',
-						type === 'success' && 'bg-emerald-500/30',
-						type === 'error' && 'bg-red-500/30',
-						type === 'warning' && 'bg-amber-500/30',
-						type === 'info' && 'bg-blue-500/30',
+						// Barre de progression — couleur sémantique atténuée à 30%
+					type === 'success' && 'bg-[#16A34A]/30',
+						type === 'error' && 'bg-[#DC2626]/30',
+						type === 'warning' && 'bg-[#F59E0B]/30',
+						type === 'info' && 'bg-[#2563EB]/30',
 						type === 'default' && 'bg-muted',
 					)}
 				/>
@@ -249,11 +253,13 @@ export function MinimalToast({
 		}
 	}, [open, onClose])
 
+	// Couleurs de fond du MinimalToast (pill en bas de l'écran)
+	// Correspond aux couleurs sémantiques de SmartConforme
 	const bgColors: Record<ToastType, string> = {
-		success: 'bg-emerald-500',
-		error: 'bg-red-500',
-		warning: 'bg-amber-500',
-		info: 'bg-blue-500',
+		success: 'bg-[#16A34A]',   // Vert — document à jour / succès
+		error: 'bg-[#DC2626]',     // Rouge — erreur / document expiré
+		warning: 'bg-[#F59E0B]',   // Orange — avertissement / expiration proche
+		info: 'bg-[#2563EB]',      // Bleu — information / en cours
 		default: 'bg-foreground',
 	}
 
@@ -266,7 +272,8 @@ export function MinimalToast({
 					exit={{ opacity: 0, y: 50 }}
           
 					className={cn(
-						'fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full px-6 py-3 font-medium text-black text-sm shadow-lg dark:text-white',
+						// Texte toujours blanc sur le fond coloré (success/error/warning/info)
+					'fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full px-6 py-3 font-medium text-white text-sm shadow-lg',
 						bgColors[type],
 					)}
 				>
@@ -445,11 +452,12 @@ export function StackedNotifications({
 	const visibleToasts = toasts.slice(0, maxVisible)
 	const hiddenCount = Math.max(0, toasts.length - maxVisible)
 
+	// Icônes pour les StackedNotifications — mêmes couleurs sémantiques
 	const icons: Record<ToastType, React.ReactNode> = {
-		success: <CheckCircle className="h-5 w-5 text-emerald-500" />,
-		error: <AlertCircle className="h-5 w-5 text-red-500" />,
-		warning: <AlertTriangle className="h-5 w-5 text-amber-500" />,
-		info: <Info className="h-5 w-5 text-blue-500" />,
+		success: <CheckCircle className="h-5 w-5" style={{ color: '#16A34A' }} />,
+		error: <AlertCircle className="h-5 w-5" style={{ color: '#DC2626' }} />,
+		warning: <AlertTriangle className="h-5 w-5" style={{ color: '#F59E0B' }} />,
+		info: <Info className="h-5 w-5" style={{ color: '#2563EB' }} />,
 		default: <Bell className="h-5 w-5 text-muted-foreground" />,
 	}
 

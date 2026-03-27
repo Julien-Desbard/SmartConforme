@@ -136,14 +136,28 @@ export default function DropZone(props: DropZoneProps) {
 		e.target.value = ''
 	}
 
+	// ── STYLES DE LA DROPZONE ─────────────────────────────────────────────────
+	// On définit 3 styles différents selon l'état de la zone d'upload :
+	// 1. normalStyle  : état par défaut — fond blanc, bordure grise en pointillés
+	// 2. draggingStyle : quand l'utilisateur glisse un fichier dessus — bordure bleue
+	// 3. uploadingStyle : quand l'upload est en cours — bordure bleue solide
+
+	// Styles communs à tous les états
 	const baseStyle =
-		'flex flex-col items-center text-center py-12 px-24 w-3xl border-2 rounded-lg transition duration-200 cursor-pointer '
+		'flex flex-col items-center text-center py-12 px-24 w-3xl border-2 rounded-lg transition duration-200 cursor-pointer'
+
+	// État normal : fond blanc (#FFFFFF), bordure grise pointillée
+	// Au survol, la bordure devient bleue et le composant monte légèrement
 	const normalStyle =
-		'bg-gray-900 border-gray-800 border-dashed hover:border-[#06D6A0] hover:bg-[#06D6A0]/3 hover:-translate-y-1'
+		'bg-white border-[#E4E4E7] border-dashed hover:border-[#2563EB] hover:bg-[#EFF6FF] hover:-translate-y-1'
+
+	// État "glisser" : quand un fichier est au-dessus de la zone
 	const draggingStyle =
-		'border-dashed border-[#06D6A0] bg-[#06D6A0]/3 -translate-y-1'
+		'border-dashed border-[#2563EB] bg-[#EFF6FF] -translate-y-1'
+
+	// État "upload" : le fichier a été déposé, l'envoi est en cours
 	const uploadingStyle =
-		'border-solid border-[#06D6A0] bg-[#06D6A0]/3 -translate-y-1'
+		'border-solid border-[#2563EB] bg-[#EFF6FF] -translate-y-1'
 
 	let titre = 'Glissez votre facture PDF ici'
 	let sousTitre = 'Ou cliquez pour parcourir'
@@ -169,14 +183,22 @@ export default function DropZone(props: DropZoneProps) {
 				onChange={handleFileInputChange}
 				className="hidden"
 			/>
+			{/*
+				Icône Upload — bleu primaire SmartConforme (#2563EB).
+				Le fond bleu très clair (#EFF6FF) crée un cercle "pill" autour de l'icône.
+			*/}
 			<Upload
 				size={100}
-				className="p-6 mb-10 bg-[#06D6A0]/10 rounded-xl text-[#06D6A0]"
+				className="p-6 mb-10 rounded-xl"
+				style={{
+					backgroundColor: '#EFF6FF',  // Bleu très clair = primary-subtle
+					color: '#2563EB',             // Bleu primaire SmartConforme
+				}}
 			/>
 			<div className="flex flex-col items-center gap-2">
-				<p className="text-2xl tracking-wide">{titre}</p>
+				<p className="text-2xl tracking-wide" style={{ color: '#18181B' }}>{titre}</p>
 				{sousTitre && (
-					<p className="text-lg text-[#8b949e] tracking-wide">{sousTitre}</p>
+					<p className="text-lg tracking-wide" style={{ color: '#A1A1AA' }}>{sousTitre}</p>
 				)}
 			</div>
 		</div>
