@@ -27,10 +27,7 @@
         "./src/*"
       ]
     },
-    "types": [
-      "jest",
-      "@testing-library/jest-dom"
-    ]
+    "types": []
   },
   "include": [
     "next-env.d.ts",
@@ -39,11 +36,14 @@
     "front/.next/types/**/*.ts",
     "front/.next/dev/types/**/*.ts",
     "**/*.mts",
-    "src/components/DropZone.test.js",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ]
 }
