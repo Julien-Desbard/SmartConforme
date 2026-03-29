@@ -1,14 +1,127 @@
+/* Import Tailwind CSS v4 and animation utilities */
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "uploadthing/tw/v4";
-@source "../node_modules/@uploadthing/react/dist";
 
-@custom-variant dark (&:is(.dark *));
+/* ─────────────────────────────────────────────────────────
+   SMARTCONFORME — DESIGN TOKENS
+   Toutes les couleurs, polices et rayons sont définis ici
+   comme variables CSS. Changer une variable ici affecte
+   tout le site automatiquement.
+   ───────────────────────────────────────────────────────── */
+
+:root {
+  /* ── COULEURS PRIMAIRES ──────────────────────────────── */
+  /* Bleu principal : utilisé pour les boutons, liens, focus */
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  /* Fond bleu très clair pour les états hover subtils */
+  --color-primary-subtle: #EFF6FF;
+
+  /* ── NEUTRALS (échelle Zinc) ─────────────────────────── */
+  /* Les surfaces : blanc pur pour les cards, #FAFAFA pour le fond de page */
+  --color-surface: #FFFFFF;
+  --color-background: #FAFAFA;
+  /* Bordures et séparateurs */
+  --color-border: #E4E4E7;
+  --color-border-subtle: #F4F4F5;
+  /* Texte : hiérarchie claire du plus foncé (titres) au plus clair (muet) */
+  --color-text-primary: #18181B;
+  --color-text-secondary: #3F3F46;
+  --color-text-muted: #A1A1AA;
+
+  /* ── COULEURS SÉMANTIQUES ────────────────────────────── */
+  /* Vert = document à jour / action réussie */
+  --color-success: #16A34A;
+  --color-success-bg: #F0FDF4;
+  /* Orange = expiration proche (< 90 jours) */
+  --color-warning: #F59E0B;
+  --color-warning-bg: #FFFBEB;
+  /* Rouge = document expiré / erreur */
+  --color-error: #DC2626;
+  --color-error-bg: #FEF2F2;
+  /* Bleu = information / extraction en cours */
+  --color-info: #2563EB;
+  --color-info-bg: #EFF6FF;
+
+  /* ── POLICES ─────────────────────────────────────────── */
+  /* Satoshi : titres et affichage hero (géométrique, précis) */
+  --font-display: 'Satoshi', 'Instrument Sans', sans-serif;
+  /* Instrument Sans : corps de texte, labels UI */
+  --font-body: 'Instrument Sans', sans-serif;
+  /* Geist Mono : dates, compteurs, statuts — renforce le côté "outil précis" */
+  --font-mono: 'Geist Mono', monospace;
+
+  /* ── RAYONS DE BORDURE ───────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Variables Tailwind/shadcn (conservées pour compatibilité) */
+  --radius: 0.5rem;
+  --background: var(--color-background);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-primary);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--color-border-subtle);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-border-subtle);
+  --muted-foreground: var(--color-text-muted);
+  --accent: var(--color-primary-subtle);
+  --accent-foreground: var(--color-primary);
+  --destructive: var(--color-error);
+  --border: var(--color-border);
+  --input: var(--color-border);
+  --ring: var(--color-primary);
+
+  /* Chart colors */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* Sidebar (conservé pour shadcn) */
+  --sidebar: var(--color-surface);
+  --sidebar-foreground: var(--color-text-primary);
+  --sidebar-primary: var(--color-primary);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: var(--color-primary-subtle);
+  --sidebar-accent-foreground: var(--color-primary);
+  --sidebar-border: var(--color-border);
+  --sidebar-ring: var(--color-primary);
+}
+
+/* ─────────────────────────────────────────────────────────
+   MAPPING TAILWIND : connecte les variables CSS aux classes
+   Tailwind (ex: bg-background, text-foreground, etc.)
+   ───────────────────────────────────────────────────────── */
 
 @theme inline {
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-inter);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -22,106 +135,56 @@
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-background: var(--background);
+  /* Rayons */
   --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 16px);
+  --radius-4xl: calc(var(--radius) + 20px);
 }
 
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: #E6EDF3;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
+/* ─────────────────────────────────────────────────────────
+   BASE : styles appliqués à tous les éléments
+   ───────────────────────────────────────────────────────── */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    box-sizing: border-box;
   }
+
   body {
+    /* bg-background et text-foreground utilisent nos variables CSS ci-dessus */
     @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    /* Instrument Sans comme police par défaut */
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    /* Améliore le rendu des polices sur macOS et iOS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   ANIMATION : apparition avec flou (utilisée sur le footer)
+   ───────────────────────────────────────────────────────── */
+
+.blur-in {
+  animation: blur-in 0.5s linear both;
+}
+
+@keyframes blur-in {
+  0% {
+    filter: blur(12px);
+    opacity: 0;
+  }
+  100% {
+    filter: blur(0);
+    opacity: 1;
   }
 }

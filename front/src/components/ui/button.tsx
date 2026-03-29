@@ -9,16 +9,29 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[#06D6A0]/50 text-primary-foreground hover:bg-[#06D6A0]/80",
+        // Bouton principal : fond bleu plein (#2563EB), texte blanc
+        // Hover : bleu légèrement plus foncé (#1D4ED8)
+        default: "bg-[#2563EB] text-white hover:bg-[#1D4ED8]",
+
+        // Bouton destructif : fond rouge, texte blanc
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20",
+
+        // Bouton secondaire : contour (border), fond blanc, texte sombre
+        // Hover : la bordure s'assombrit légèrement
         outline:
-          "border bg-[#06D6A0]/50 shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border border-[#E4E4E7] bg-white text-[#18181B] hover:border-[#A1A1AA] shadow-xs",
+
+        // Bouton secondaire rempli : fond gris très clair, texte sombre
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "bg-[#F4F4F5] text-[#18181B] hover:bg-[#E4E4E7]",
+
+        // Bouton ghost : transparent, texte bleu, fond bleu très clair au hover
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "hover:bg-[#EFF6FF] hover:text-[#2563EB]",
+
+        // Bouton lien : texte bleu, souligné au hover
+        link: "text-[#2563EB] underline-offset-4 hover:underline",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
